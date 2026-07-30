@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+/* ========================================
+   ITURA — Fashion Editorial Design System
+   ======================================== */
+
+:root {
+  --primary: #18047b;
+  --primary-light: #2d16b3;
+  --primary-dark: #0f0254;
+  --accent: #3a23d4;
+  --accent-gold: #d4af37;
+  --cream: #E6F0FA;
+  --off-white: #F0F8FF; /* Alice White as requested by client */
+  --black: #0A0A0A;
+  --wine: #18047b; /* Mapped to primary royal blue */
+  --terra: #2d16b3; /* Mapped to vibrant royal cobalt accent */
+  --gray-200: #D8E5F2;
+  --gray-400: #93A8BE;
+  --gray-500: #687E96;
+  --gray-600: #4A5D70;
+  --gray-700: #324150;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--off-white);
+  color: var(--black);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+.font-serif {
+  font-family: var(--font-serif);
+}
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* Scrollbar — thin and minimal */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: 3px;
+}
+
+/* Hide scrollbar for horizontal galleries */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Navigation Glass */
+.nav-glass {
+  background: rgba(240, 248, 255, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(24, 4, 123, 0.08);
+}
+
+/* Buttons */
+.btn-fashion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.9375rem 2.25rem;
+  background: var(--primary);
+  color: white;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1px solid var(--primary);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 20px rgba(24, 4, 123, 0.25);
+}
+.btn-fashion:hover {
+  background: var(--primary-light);
+  border-color: var(--primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(24, 4, 123, 0.4);
+}
+
+.btn-outline-fashion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 2rem;
+  background: transparent;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1px solid var(--primary);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-outline-fashion:hover {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 20px rgba(24, 4, 123, 0.25);
+}
+
+/* Form Inputs — underline style */
+.fashion-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.875rem 0;
+  color: white;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  outline: none;
+  transition: border-color 0.3s ease;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+.fashion-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.05em;
+}
+.fashion-input:focus {
+  border-color: var(--primary-light);
+}
+.fashion-input option {
+  background: var(--black);
+  color: white;
+}
+
+/* Marquee — continuous scroll */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 45s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes imgReveal {
+  from { opacity: 0; transform: scale(1.03); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-img-reveal {
+  animation: imgReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes menuReveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-menu {
+  animation: menuReveal 0.3s ease-out forwards;
+}
+
+/* Scroll-Triggered Reveal — single clean variant */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delays */
+.stagger-1 { transition-delay: 100ms; }
+.stagger-2 { transition-delay: 200ms; }
+.stagger-3 { transition-delay: 300ms; }
+
+/* Cinematic Line Draw */
+@keyframes lineDraw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.animate-line-draw {
+  transform-origin: left;
+  animation: lineDraw 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 3D Perspective utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
