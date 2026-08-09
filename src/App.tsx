@@ -18,9 +18,9 @@ export default function App() {
   const [galleryOpen, setGalleryOpen] = useState<string | null>(null);
   const [galleryIdx, setGalleryIdx] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<'investor' | 'rsvp'>('investor');
   const [emailInput, setEmailInput] = useState('');
   const [nameInput, setNameInput] = useState('');
+  const [modalCompany, setModalCompany] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [isModalSubmitting, setIsModalSubmitting] = useState(false);
   const [modalWebsiteUrl, setModalWebsiteUrl] = useState('');
@@ -34,6 +34,17 @@ export default function App() {
   const [contactWebsiteUrl, setContactWebsiteUrl] = useState('');
 
   const [heroIdx, setHeroIdx] = useState(0);
+
+  const [detailedModalType, setDetailedModalType] = useState<'investor_deck' | 'join_itura' | null>(null);
+  const [detName, setDetName] = useState('');
+  const [detCompany, setDetCompany] = useState('');
+  const [detJob, setDetJob] = useState('');
+  const [detEmail, setDetEmail] = useState('');
+  const [detPhone, setDetPhone] = useState('');
+  const [detCountry, setDetCountry] = useState('');
+  const [detInvestType, setDetInvestType] = useState('');
+  const [detSubmitted, setDetSubmitted] = useState(false);
+  const [isDetSubmitting, setIsDetSubmitting] = useState(false);
 
   // Drag carousel refs & state
   const campaignRef = useRef<HTMLDivElement>(null);
@@ -124,7 +135,7 @@ export default function App() {
     { label: 'Concept', href: '#concept' },
     { label: 'Archive', href: '#archive' },
     { label: 'Events', href: '#popup' },
-    { label: 'Invest', href: '#invest' },
+    { label: 'Join Us', href: '#join-us' },
   ];
 
   /* ── EFFECTS ──────────────────────────────────────── */
@@ -220,14 +231,45 @@ export default function App() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameInput, email: emailInput, website_url: modalWebsiteUrl, source: modalType === 'investor' ? 'Investor Inquiry' : 'RSVP Guest' }),
+        body: JSON.stringify({ name: nameInput, email: emailInput, firm: modalCompany, website_url: modalWebsiteUrl, source: 'Investor Inquiry' }),
       });
       if (res.ok) {
         setSubmitted(true);
-        setTimeout(() => { setSubmitted(false); setIsModalOpen(false); setEmailInput(''); setNameInput(''); setModalWebsiteUrl(''); setModalType('investor'); }, 3000);
+        setTimeout(() => { setSubmitted(false); setIsModalOpen(false); setEmailInput(''); setNameInput(''); setModalCompany(''); setModalWebsiteUrl(''); }, 3000);
       } else { alert('Failed to send request. Please try again.'); }
     } catch (err) { alert('Network error. Please try again.'); }
     finally { setIsModalSubmitting(false); }
+  };
+
+  const handleDetailedSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!detEmail.trim() || !detName.trim()) return;
+    setIsDetSubmitting(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          name: detName, 
+          email: detEmail, 
+          firm: detCompany,
+          job_title: detJob,
+          phone: detPhone,
+          country: detCountry,
+          investment_type: detInvestType,
+          source: detailedModalType === 'investor_deck' ? 'Investor Deck Request' : 'Brand Participation (Join ITURA)' 
+        }),
+      });
+      if (res.ok) {
+        setDetSubmitted(true);
+        setTimeout(() => { 
+          setDetSubmitted(false); 
+          setDetailedModalType(null); 
+          setDetName(''); setDetCompany(''); setDetJob(''); setDetEmail(''); setDetPhone(''); setDetCountry(''); setDetInvestType(''); 
+        }, 3000);
+      } else { alert('Failed to send request. Please try again.'); }
+    } catch (err) { alert('Network error. Please try again.'); }
+    finally { setIsDetSubmitting(false); }
   };
 
   /* ── RENDER ───────────────────────────────────────── */
@@ -248,25 +290,16 @@ export default function App() {
             </button>
             {submitted ? (
               <div className="text-center py-8 animate-fade-in">
-                <h3 className="font-serif text-2xl mb-3">
-                  {modalType === 'investor' ? 'Request Received' : 'RSVP Confirmed'}
-                </h3>
+                <h3 className="font-serif text-2xl mb-3">Request Received</h3>
                 <p className="text-base text-white/60 leading-relaxed">
-                  Thank you, <strong className="text-white">{nameInput}</strong>.
-                  {modalType === 'investor'
-                    ? ' We will send you the investor materials shortly.'
-                    : ' You are on the guest list. See you at the opening!'}
+                  Thank you, <strong className="text-white">{nameInput}</strong>. We will send you the investor materials shortly.
                 </p>
               </div>
             ) : (
               <div>
-                <h3 className="font-serif text-2xl mb-2">
-                  {modalType === 'investor' ? 'Investor Information Request' : 'RSVP for Opening Night'}
-                </h3>
+                <h3 className="font-serif text-2xl mb-2">Investor Information Request</h3>
                 <p className="text-sm text-white/60 mb-8 leading-relaxed">
-                  {modalType === 'investor'
-                    ? 'Request investor materials, deck, and partnership details.'
-                    : 'Reserve your spot as a guest at our upcoming pop-up launch event.'}
+                  Request investor materials, deck, and partnership details.
                 </p>
                 <form onSubmit={handleModalSubmit} className="space-y-6">
                   <input type="text" name="website_url" value={modalWebsiteUrl} onChange={(e) => setModalWebsiteUrl(e.target.value)} style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
@@ -275,13 +308,91 @@ export default function App() {
                     <input type="text" required value={nameInput} onChange={(e) => setNameInput(e.target.value)} placeholder="Full Name" className="fashion-input" />
                   </div>
                   <div>
-                    <label className="block text-xs tracking-[0.15em] uppercase text-white/50 mb-1">
-                      {modalType === 'investor' ? 'Work Email *' : 'Email Address *'}
-                    </label>
-                    <input type="email" required value={emailInput} onChange={(e) => setEmailInput(e.target.value)} placeholder="Email Address" className="fashion-input" />
+                    <label className="block text-xs tracking-[0.15em] uppercase text-white/50 mb-1">Company Name</label>
+                    <input type="text" value={modalCompany} onChange={(e) => setModalCompany(e.target.value)} placeholder="Company Name" className="fashion-input" />
+                  </div>
+                  <div>
+                    <label className="block text-xs tracking-[0.15em] uppercase text-white/50 mb-1">Work Email *</label>
+                    <input type="email" required value={emailInput} onChange={(e) => setEmailInput(e.target.value)} placeholder="Work Email" className="fashion-input" />
                   </div>
                   <button type="submit" disabled={isModalSubmitting} className="btn-fashion w-full justify-center py-4 mt-4 text-xs">
-                    <span>{isModalSubmitting ? 'Processing\u2026' : modalType === 'investor' ? 'Submit Request' : 'Confirm RSVP'}</span>
+                    <span>{isModalSubmitting ? 'Processing\u2026' : 'Submit Request'}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── DETAILED MODAL (Join Us / Invest) ── */}
+      {detailedModalType && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-menu overflow-y-auto"
+          onClick={(e) => e.target === e.currentTarget && setDetailedModalType(null)}
+        >
+          <div className="bg-[#0A0A0A] border border-white/15 p-8 md:p-10 max-w-lg w-full relative text-white my-8 max-h-[90vh] overflow-y-auto hide-scrollbar">
+            <button onClick={() => setDetailedModalType(null)} className="absolute top-5 right-5 text-white/40 hover:text-white transition-colors" aria-label="Close">
+              <X className="w-6 h-6" />
+            </button>
+            {detSubmitted ? (
+              <div className="text-center py-8 animate-fade-in">
+                <h3 className="font-serif text-2xl mb-3">Request Received</h3>
+                <p className="text-base text-white/60 leading-relaxed">
+                  Thank you, <strong className="text-white">{detName}</strong>.
+                  {detailedModalType === 'investor_deck'
+                    ? ' We will send you the investor materials shortly.'
+                    : ' Our team will be in touch with you soon regarding brand participation.'}
+                </p>
+              </div>
+            ) : (
+              <div>
+                <h3 className="font-serif text-2xl mb-2">
+                  {detailedModalType === 'investor_deck' ? "Request Investor's Deck" : 'Join ITURA'}
+                </h3>
+                <p className="text-sm text-white/60 mb-8 leading-relaxed">
+                  {detailedModalType === 'investor_deck'
+                    ? 'Please provide your details below to receive our growth strategy, financial projections, and investment opportunities.'
+                    : 'Interested in brand participation or partnership? Let us know more about you.'}
+                </p>
+                <form onSubmit={handleDetailedSubmit} className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-xs tracking-[0.15em] uppercase text-white/50 mb-1">Full Name *</label>
+                      <input type="text" required value={detName} onChange={(e) => setDetName(e.target.value)} placeholder="Full Name" className="fashion-input" />
+                    </div>
+                    <div>
+                      <label className="block text-xs tracking-[0.15em] uppercase text-white/50 mb-1">Company / Org</label>
+                      <input type="text" value={detCompany} onChange={(e) => setDetCompany(e.target.value)} placeholder="Company" className="fashion-input" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-xs tracking-[0.15em] uppercase text-white/50 mb-1">Job Title</label>
+                      <input type="text" value={detJob} onChange={(e) => setDetJob(e.target.value)} placeholder="Job Title" className="fashion-input" />
+                    </div>
+                    <div>
+                      <label className="block text-xs tracking-[0.15em] uppercase text-white/50 mb-1">Email Address *</label>
+                      <input type="email" required value={detEmail} onChange={(e) => setDetEmail(e.target.value)} placeholder="Email Address" className="fashion-input" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-xs tracking-[0.15em] uppercase text-white/50 mb-1">Phone Number</label>
+                      <input type="tel" value={detPhone} onChange={(e) => setDetPhone(e.target.value)} placeholder="Phone Number" className="fashion-input" />
+                    </div>
+                    <div>
+                      <label className="block text-xs tracking-[0.15em] uppercase text-white/50 mb-1">Country</label>
+                      <input type="text" value={detCountry} onChange={(e) => setDetCountry(e.target.value)} placeholder="Country" className="fashion-input" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs tracking-[0.15em] uppercase text-white/50 mb-1">Investment Type</label>
+                    <input type="text" value={detInvestType} onChange={(e) => setDetInvestType(e.target.value)} placeholder="e.g. Angel, VC, Family Office, Corporate" className="fashion-input" />
+                  </div>
+                  <button type="submit" disabled={isDetSubmitting} className="btn-fashion w-full justify-center py-4 mt-2 text-xs">
+                    <span>{isDetSubmitting ? 'Processing\u2026' : detailedModalType === 'investor_deck' ? "Request Investor's Deck" : 'Join ITURA'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </form>
@@ -302,14 +413,10 @@ export default function App() {
               {link.label}
             </a>
           ))}
-          <button onClick={() => { setMenuOpen(false); setModalType('investor'); setIsModalOpen(true); }} className="btn-fashion mt-8">
-            <span>Investor Access</span>
+          <a href="#contact" onClick={() => setMenuOpen(false)} className="btn-fashion mt-8 text-center flex items-center justify-center gap-2 px-8 py-3 w-48">
+            <span>Reach Out</span>
             <ArrowRight className="w-4 h-4" />
-          </button>
-          <button onClick={() => { setMenuOpen(false); setModalType('rsvp'); setIsModalOpen(true); }} className="btn-outline-fashion mt-3 text-white border-white/30 hover:bg-white hover:text-[#0A0A0A]">
-            <span>RSVP as Guest</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          </a>
         </div>
       )}
 
@@ -325,10 +432,10 @@ export default function App() {
             ))}
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={() => { setModalType('investor'); setIsModalOpen(true); }} className="hidden sm:inline-flex items-center justify-center gap-2 bg-[#18047b] hover:bg-[#2d16b3] text-white text-[8px] md:text-[10px] font-semibold uppercase tracking-[0.15em] px-4 md:px-6 py-2 md:py-2.5 transition-all hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(24,4,123,0.25)] whitespace-nowrap">
-              <span>Investor Access</span>
+            <a href="#contact" className="hidden sm:inline-flex items-center justify-center gap-2 bg-[#18047b] hover:bg-[#2d16b3] text-white text-[8px] md:text-[10px] font-semibold uppercase tracking-[0.15em] px-4 md:px-6 py-2 md:py-2.5 transition-all hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(24,4,123,0.25)] whitespace-nowrap">
+              <span>Reach Out</span>
               <ArrowRight className="w-3 h-3 md:w-3.5 md:h-3.5" />
-            </button>
+            </a>
             <button onClick={() => setMenuOpen(true)} className={`lg:hidden transition-colors ${scrolled ? 'text-[#0A0A0A]' : 'text-white'}`} aria-label="Menu">
               <Menu className="w-6 h-6" />
             </button>
@@ -367,7 +474,7 @@ export default function App() {
             Fashion. Culture. Commerce. <span className="text-[#D4AF37] italic">Reimagined.</span>
           </p>
           <div className="flex flex-wrap items-center gap-5">
-            <button onClick={() => { setModalType('investor'); setIsModalOpen(true); }} className="btn-fashion">
+            <button onClick={() => setIsModalOpen(true)} className="btn-fashion">
               <span>Investor Access</span>
               <ArrowRight className="w-4 h-4" />
             </button>
@@ -566,14 +673,14 @@ export default function App() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <button onClick={() => { setModalType('investor'); setIsModalOpen(true); }} className="btn-fashion text-xs">
+                <button onClick={() => setIsModalOpen(true)} className="btn-fashion text-xs flex justify-center items-center gap-2">
                   <span>Investor Access</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
-                <button onClick={() => { setModalType('rsvp'); setIsModalOpen(true); }} className="btn-outline-fashion text-xs">
+                <a href="https://luma.com/scic6wj2" target="_blank" rel="noopener noreferrer" className="btn-outline-fashion text-xs flex justify-center items-center gap-2 border-[#18047b] text-[#18047b] hover:bg-[#18047b] hover:text-white">
                   <span>RSVP as Guest</span>
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </a>
               </div>
             </div>
 
@@ -737,9 +844,99 @@ export default function App() {
 
 
       {/* ══════════════════════════════════════════════════
+          JOIN US / INVEST — New detailed section
+          ══════════════════════════════════════════════════ */}
+      <section id="join-us" className="bg-[#FAFAFA] py-24 sm:py-32 border-t border-[#0A0A0A]/5">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
+            
+            {/* LEFT COLUMN: Pitch & CTA */}
+            <div className="lg:col-span-7 scroll-reveal">
+              <p className="text-xs tracking-[0.3em] uppercase text-[#D4AF37] mb-6 font-semibold">Join ITURA</p>
+              <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#0A0A0A] mb-10 leading-[1.1] tracking-tight">
+                Invest in the Future <br className="hidden sm:block" />of African Retail
+              </h2>
+              
+              <div className="text-[#0A0A0A]/70 space-y-6 text-lg sm:text-xl leading-relaxed font-light mb-12 max-w-2xl">
+                <p>
+                  <strong className="font-medium text-[#0A0A0A]">ITURA is redefining how the world discovers African creativity.</strong>
+                </p>
+                <p>
+                  We are building Europe's leading destination for premium African fashion, beauty, accessories,
+                  homeware, and cultural experiences—connecting exceptional independent brands with a global
+                  audience through immersive retail, curated events, and strategic partnerships.
+                </p>
+                <p>
+                  Our vision extends beyond a concept store. ITURA is creating an ecosystem where African creativity is
+                  commercially successful, culturally celebrated, and globally accessible.
+                </p>
+                <p>
+                  As we expand our retail footprint, launch new experiential concepts, and scale across major
+                  international cities, we are seeking investors and strategic partners who share our long-term vision.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-5">
+                <button onClick={() => setDetailedModalType('investor_deck')} className="w-full sm:w-auto bg-[#18047b] hover:bg-[#2d16b3] text-white text-[11px] font-semibold uppercase tracking-[0.15em] px-10 py-5 transition-all hover:-translate-y-1 shadow-[0_10px_40px_rgba(24,4,123,0.3)] flex items-center justify-center gap-3">
+                  <span>Request Investor's Deck</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button onClick={() => setDetailedModalType('join_itura')} className="w-full sm:w-auto bg-transparent border border-[#0A0A0A]/20 text-[#0A0A0A] hover:border-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white text-[11px] font-semibold uppercase tracking-[0.15em] px-10 py-5 transition-all flex items-center justify-center gap-3">
+                  <span>Join ITURA</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: Target Partners Card */}
+            <div className="lg:col-span-5 scroll-reveal">
+              <div className="bg-[#0A0A0A] text-white p-10 sm:p-14 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#18047b] rounded-full blur-[100px] opacity-30 pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#D4AF37] rounded-full blur-[120px] opacity-10 pointer-events-none translate-y-1/3 -translate-x-1/3"></div>
+                
+                <h3 className="font-serif text-2xl sm:text-3xl mb-10 pb-6 border-b border-white/10 relative z-10">We welcome conversations with:</h3>
+                
+                <ul className="space-y-6 text-white/80 text-base sm:text-lg tracking-wide font-light relative z-10">
+                  <li className="flex items-start gap-4">
+                    <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full mt-2.5 flex-shrink-0"></span>
+                    <span>Angel Investors</span>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full mt-2.5 flex-shrink-0"></span>
+                    <span>Venture Capital Firms</span>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full mt-2.5 flex-shrink-0"></span>
+                    <span>Family Offices</span>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full mt-2.5 flex-shrink-0"></span>
+                    <span>Strategic Corporate Partners</span>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full mt-2.5 flex-shrink-0"></span>
+                    <span>Retail &amp; Real Estate Partners</span>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full mt-2.5 flex-shrink-0"></span>
+                    <span>Impact Investors</span>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full mt-2.5 flex-shrink-0"></span>
+                    <span>High-Net-Worth Individuals</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
           FOOTER & CONTACT — Dark editorial
           ══════════════════════════════════════════════════ */}
-      <footer id="invest" className="bg-[#0A0A0A] text-white py-16 sm:py-24">
+      <footer id="contact" className="bg-[#0A0A0A] text-white py-16 sm:py-24">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
             <div className="scroll-reveal">
@@ -750,14 +947,25 @@ export default function App() {
               <p className="text-base text-white/60 leading-[1.85] mb-10">
                 More Than a Store &mdash; A Destination. A Parisian storefront + global e-commerce reach. Connecting African designers with global consumers while supporting international growth.
               </p>
-              <div className="space-y-3 text-base text-white/50">
-                <p>info@ituraafrica.com</p>
-                <p>Paris, France</p>
-                <p>
-                  <a href="https://instagram.com/itura_paris" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
-                    Instagram: @itura_paris
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-8 text-sm text-white/50 border-t border-white/10 pt-10">
+                <div>
+                  <a href="mailto:info@ituraafrica.com" className="text-white hover:text-[#D4AF37] transition-colors block text-base mb-1">info@ituraafrica.com</a>
+                  <span className="text-[10px] text-white/40 uppercase tracking-widest">General Enquiries</span>
+                </div>
+                <div>
+                  <a href="mailto:brands@ituraafrica.com" className="text-white hover:text-[#D4AF37] transition-colors block text-base mb-1">brands@ituraafrica.com</a>
+                  <span className="text-[10px] text-white/40 uppercase tracking-widest">Brand Participation</span>
+                </div>
+                <div>
+                  <a href="mailto:press@ituraafrica.com" className="text-white hover:text-[#D4AF37] transition-colors block text-base mb-1">press@ituraafrica.com</a>
+                  <span className="text-[10px] text-white/40 uppercase tracking-widest">Press Enquiries</span>
+                </div>
+                <div>
+                  <p className="text-white text-base mb-1">Paris, France</p>
+                  <a href="https://instagram.com/ituraafrique" target="_blank" rel="noreferrer" className="text-white/60 hover:text-[#D4AF37] transition-colors block text-[10px] tracking-widest uppercase">
+                    IG: @ituraafrique
                   </a>
-                </p>
+                </div>
               </div>
             </div>
 

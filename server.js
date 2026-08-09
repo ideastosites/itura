@@ -16,7 +16,7 @@ app.use(express.json());
 
 // Ultra-clean HTML email template
 const generateEmailTemplate = (data) => {
-  const { name, email, firm, notes, source } = data;
+  const { name, email, firm, notes, source, job_title, phone, country, investment_type } = data;
   
   return `
     <!DOCTYPE html>
@@ -33,7 +33,7 @@ const generateEmailTemplate = (data) => {
               ITURA
             </h1>
             <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.8); font-size: 12px; letter-spacing: 4px; text-transform: uppercase;">
-              New ${source === 'VIP Access' ? 'VIP Access Request' : 'Contact Inquiry'}
+              New ${source}
             </p>
           </div>
           
@@ -52,11 +52,43 @@ const generateEmailTemplate = (data) => {
                   <a href="mailto:${email}" style="font-size: 16px; color: #18047b; text-decoration: none;">${email}</a>
                 </td>
               </tr>
+              ${phone ? `
+              <tr>
+                <td style="padding: 15px 0; border-bottom: 1px solid #D8E5F2;">
+                  <strong style="color: #6B0E1E; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Phone</strong><br/>
+                  <span style="font-size: 16px; color: #324150;">${phone}</span>
+                </td>
+              </tr>
+              ` : ''}
               ${firm ? `
               <tr>
                 <td style="padding: 15px 0; border-bottom: 1px solid #D8E5F2;">
-                  <strong style="color: #6B0E1E; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Company / Venture Firm</strong><br/>
+                  <strong style="color: #6B0E1E; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Company / Firm</strong><br/>
                   <span style="font-size: 16px; color: #324150;">${firm}</span>
+                </td>
+              </tr>
+              ` : ''}
+              ${job_title ? `
+              <tr>
+                <td style="padding: 15px 0; border-bottom: 1px solid #D8E5F2;">
+                  <strong style="color: #6B0E1E; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Job Title</strong><br/>
+                  <span style="font-size: 16px; color: #324150;">${job_title}</span>
+                </td>
+              </tr>
+              ` : ''}
+              ${country ? `
+              <tr>
+                <td style="padding: 15px 0; border-bottom: 1px solid #D8E5F2;">
+                  <strong style="color: #6B0E1E; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Country</strong><br/>
+                  <span style="font-size: 16px; color: #324150;">${country}</span>
+                </td>
+              </tr>
+              ` : ''}
+              ${investment_type ? `
+              <tr>
+                <td style="padding: 15px 0; border-bottom: 1px solid #D8E5F2;">
+                  <strong style="color: #6B0E1E; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Investment Type</strong><br/>
+                  <span style="font-size: 16px; color: #324150;">${investment_type}</span>
                 </td>
               </tr>
               ` : ''}
@@ -88,7 +120,7 @@ const generateEmailTemplate = (data) => {
 // API Route for Contact Submission
 app.post('/api/contact', async (req, res) => {
   try {
-    const { name, email, firm, notes, website_url, source } = req.body;
+    const { name, email, firm, notes, website_url, source, job_title, phone, country, investment_type } = req.body;
 
     // 1. HONEYPOT VALIDATION (Bot Protection)
     // If the hidden 'website_url' field has any value, silently drop the request
@@ -103,7 +135,13 @@ app.post('/api/contact', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Name and email are required.' });
     }
 
-    // 3. NODEMAILER CONFIGURATION
+    // 3. ROUTE EMAIL BASED ON SOURCE
+    let toEmail = process.env.CONTACT_EMAIL || 'info@ituraafrica.com';
+    if (source === 'Investor Inquiry' || source === 'Investor Deck Request' || source === 'Brand Participation (Join ITURA)') {
+      toEmail = 'brands@ituraafrica.com';
+    }
+
+    // 4. NODEMAILER CONFIGURATION
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: process.env.SMTP_PORT || 465,
@@ -114,13 +152,13 @@ app.post('/api/contact', async (req, res) => {
       },
     });
 
-    // 4. EMAIL OPTIONS
+    // 5. EMAIL OPTIONS
     const mailOptions = {
-      from: \`"ITURA Portal" <\${process.env.SMTP_USER}>\`,
-      to: process.env.CONTACT_EMAIL || 'info@ituraafrica.com',
+      from: `"ITURA Portal" <${process.env.SMTP_USER}>`,
+      to: toEmail,
       replyTo: email,
-      subject: \`[ITURA Portal] New \${source === 'VIP Access' ? 'VIP Access Request' : 'Inquiry'} from \${name}\`,
-      html: generateEmailTemplate({ name, email, firm, notes, source }),
+      subject: `[ITURA Portal] New ${source} from ${name}`,
+      html: generateEmailTemplate({ name, email, firm, notes, source, job_title, phone, country, investment_type }),
     };
 
     // 5. SEND EMAIL
