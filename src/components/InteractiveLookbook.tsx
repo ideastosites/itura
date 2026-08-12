@@ -26,7 +26,7 @@ const LOOKS: Look[] = [
     number: 'Look // 01',
     title: 'Curated Selections of African Fashion, Beauty, Accessories & Home Décor',
     category: 'The ITURA Concept',
-    image: '/Hero_Images/IMG_6799.jpg',
+    image: '/Hero_Images/IMG_6799.webp',
     hotspots: [
       {
         id: 'hs-1',
@@ -62,7 +62,7 @@ const LOOKS: Look[] = [
     number: 'Look // 02',
     title: 'Immersive Storytelling Zones to Educate & Engage Shoppers',
     category: 'The Opportunity & Solution',
-    image: '/Paris_campaign/IMG_6720.jpg',
+    image: '/Paris_campaign/IMG_6720.webp',
     hotspots: [
       {
         id: 'hs-201',
@@ -89,7 +89,7 @@ const LOOKS: Look[] = [
     number: 'Look // 03',
     title: 'Events, Workshops, and Pop-Up Brand Activations',
     category: 'Market Validation',
-    image: '/Paris_cocktail/IMG_7581.jpg',
+    image: '/Paris_cocktail/IMG_7581.webp',
     hotspots: [
       {
         id: 'hs-301',
@@ -151,7 +151,7 @@ export const InteractiveLookbook: React.FC = () => {
           {/* Main Visual with Hotspots (Cols 1-7) */}
           <div className="lg:col-span-7 relative group">
             <div className="relative overflow-hidden border border-white/15 bg-[#141414] aspect-[3/4] max-h-[780px] mx-auto">
-              <img
+              <img loading="lazy" decoding="async"
                 src={currentLook.image}
                 alt={currentLook.title}
                 draggable={false}

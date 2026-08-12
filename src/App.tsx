@@ -59,40 +59,40 @@ export default function App() {
   /* ── DATA ─────────────────────────────────────────── */
 
   const heroSlides = [
-    { img: '/Hero_Images/IMG_7148.jpg' },
-    { img: '/Hero_Images/IMG_7377.jpg' },
-    { img: '/Hero_Images/IMG_7503.jpg' },
-    { img: '/Hero_Images/IMG_7584.jpg' },
-    { img: '/Hero_Images/IMG_7657.jpg' },
-    { img: '/Hero_Images/IMG_7701.jpg' },
-    { img: '/Hero_Images/IMG_7785.jpg' },
-    { img: '/Hero_Images/IMG_7830.jpg' },
+    { img: '/Hero_Images/IMG_7148.webp' },
+    { img: '/Hero_Images/IMG_7377.webp' },
+    { img: '/Hero_Images/IMG_7503.webp' },
+    { img: '/Hero_Images/IMG_7584.webp' },
+    { img: '/Hero_Images/IMG_7657.webp' },
+    { img: '/Hero_Images/IMG_7701.webp' },
+    { img: '/Hero_Images/IMG_7785.webp' },
+    { img: '/Hero_Images/IMG_7830.webp' },
   ];
 
   const campaignSlides = [
-    { img: '/Paris_campaign/IMG_6688.jpg' },
-    { img: '/Paris_campaign/IMG_6720.jpg' },
-    { img: '/Paris_campaign/IMG_6766.jpg' },
-    { img: '/Paris_campaign/IMG_6984.jpg' },
-    { img: '/Paris_campaign/IMG_7008.jpg' },
-    { img: '/Paris_campaign/IMG_7233.jpg' },
-    { img: '/Paris_campaign/IMG_7323.jpg' },
-    { img: '/Paris_campaign/IMG_7351.jpg' },
-    { img: '/Paris_campaign/IMG_7455.jpg' },
-    { img: '/Paris_campaign/IMG_7524.jpg' },
+    { img: '/Paris_campaign/IMG_6688.webp' },
+    { img: '/Paris_campaign/IMG_6720.webp' },
+    { img: '/Paris_campaign/IMG_6766.webp' },
+    { img: '/Paris_campaign/IMG_6984.webp' },
+    { img: '/Paris_campaign/IMG_7008.webp' },
+    { img: '/Paris_campaign/IMG_7233.webp' },
+    { img: '/Paris_campaign/IMG_7323.webp' },
+    { img: '/Paris_campaign/IMG_7351.webp' },
+    { img: '/Paris_campaign/IMG_7455.webp' },
+    { img: '/Paris_campaign/IMG_7524.webp' },
   ];
 
   const cocktailSlides = [
-    { img: '/Paris_cocktail/IMG_7570.jpg' },
-    { img: '/Paris_cocktail/IMG_7581.jpg' },
-    { img: '/Paris_cocktail/IMG_7583.jpg' },
-    { img: '/Paris_cocktail/IMG_7594.jpg' },
-    { img: '/Paris_cocktail/IMG_7652.jpg' },
-    { img: '/Paris_cocktail/IMG_7676.jpg' },
-    { img: '/Paris_cocktail/IMG_7769.jpg' },
-    { img: '/Paris_cocktail/IMG_7803.jpg' },
-    { img: '/Paris_cocktail/IMG_7908.jpg' },
-    { img: '/Paris_cocktail/IMG_7969-2.jpg' },
+    { img: '/Paris_cocktail/IMG_7570.webp' },
+    { img: '/Paris_cocktail/IMG_7581.webp' },
+    { img: '/Paris_cocktail/IMG_7583.webp' },
+    { img: '/Paris_cocktail/IMG_7594.webp' },
+    { img: '/Paris_cocktail/IMG_7652.webp' },
+    { img: '/Paris_cocktail/IMG_7676.webp' },
+    { img: '/Paris_cocktail/IMG_7769.webp' },
+    { img: '/Paris_cocktail/IMG_7803.webp' },
+    { img: '/Paris_cocktail/IMG_7908.webp' },
+    { img: '/Paris_cocktail/IMG_7969-2.webp' },
   ];
 
   const previousPopUps: Record<string, { title: string; subtitle: string; images: string[] }> = {
@@ -100,32 +100,32 @@ export default function App() {
       title: 'Paris Spring Pop-Up',
       subtitle: 'Spring 2025 — Le Marais, Paris',
       images: [
-        '/Paris_Spring/Paris_Spring (1).jpg',
-        '/Paris_Spring/Paris_Spring (2).jpg',
-        '/Paris_Spring/Paris_Spring (3).jpg',
-        '/Paris_Spring/Paris_Spring (4).jpg',
-        '/Paris_Spring/Paris_Spring (5).jpg',
-        '/Paris_Spring/Paris_Spring (6).jpg',
-        '/Paris_Spring/Paris_Spring (7).jpg',
-        '/Paris_Spring/Paris_Spring (8).jpg',
-        '/Paris_Spring/Paris_Spring (9).jpg',
-        '/Paris_Spring/Paris_Spring (10).jpg',
+        '/Paris_Spring/Paris_Spring (1).webp',
+        '/Paris_Spring/Paris_Spring (2).webp',
+        '/Paris_Spring/Paris_Spring (3).webp',
+        '/Paris_Spring/Paris_Spring (4).webp',
+        '/Paris_Spring/Paris_Spring (5).webp',
+        '/Paris_Spring/Paris_Spring (6).webp',
+        '/Paris_Spring/Paris_Spring (7).webp',
+        '/Paris_Spring/Paris_Spring (8).webp',
+        '/Paris_Spring/Paris_Spring (9).webp',
+        '/Paris_Spring/Paris_Spring (10).webp',
       ],
     },
     'fete-musique': {
       title: 'Paris F\u00eate de la Musique',
       subtitle: 'June 2025 — F\u00eate de la Musique, Paris',
       images: [
-        '/Paris_Fete/Paris_Fete 1 (1).jpeg',
-        '/Paris_Fete/Paris_Fete 1 (2).jpeg',
-        '/Paris_Fete/Paris_Fete 1 (3).jpeg',
-        '/Paris_Fete/Paris_Fete 1 (4).jpeg',
-        '/Paris_Fete/Paris_Fete 1 (5).jpeg',
-        '/Paris_Fete/Paris_Fete 1 (6).jpeg',
-        '/Paris_Fete/Paris_Fete 1 (7).jpeg',
-        '/Paris_Fete/Paris_Fete 1 (8).jpeg',
-        '/Paris_Fete/Paris_Fete 1 (9).jpeg',
-        '/Paris_Fete/Paris_Fete 1 (10).jpeg',
+        '/Paris_Fete/Paris_Fete 1 (1).webp',
+        '/Paris_Fete/Paris_Fete 1 (2).webp',
+        '/Paris_Fete/Paris_Fete 1 (3).webp',
+        '/Paris_Fete/Paris_Fete 1 (4).webp',
+        '/Paris_Fete/Paris_Fete 1 (5).webp',
+        '/Paris_Fete/Paris_Fete 1 (6).webp',
+        '/Paris_Fete/Paris_Fete 1 (7).webp',
+        '/Paris_Fete/Paris_Fete 1 (8).webp',
+        '/Paris_Fete/Paris_Fete 1 (9).webp',
+        '/Paris_Fete/Paris_Fete 1 (10).webp',
       ],
     },
   };
@@ -424,7 +424,7 @@ export default function App() {
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'nav-glass py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between">
           <a href="#" className="z-10">
-            <img src={scrolled ? '/ituracolor.png' : '/iturawhite.png'} alt="ITURA" className="h-8 sm:h-12 transition-all" />
+            <img loading="lazy" decoding="async" src={scrolled ? '/ituracolor.webp' : '/iturawhite.webp'} alt="ITURA" className="h-8 sm:h-12 transition-all" />
           </a>
           <div className={`hidden lg:flex items-center gap-8 text-[11px] tracking-[0.2em] uppercase font-medium transition-colors duration-500 ${scrolled ? 'text-[#0A0A0A]' : 'text-white'}`}>
             {navLinks.map((link) => (
@@ -544,8 +544,8 @@ export default function App() {
 
             <div className="scroll-reveal h-full w-full">
               <div className="aspect-[3/4] overflow-hidden group">
-                <img
-                  src="/second section.jpg"
+                <img loading="lazy" decoding="async"
+                  src="/second section.webp"
                   alt="ITURA Experience"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
@@ -625,7 +625,7 @@ export default function App() {
         >
           {campaignSlides.map((slide, idx) => (
             <div key={idx} className="flex-shrink-0 w-[75vw] sm:w-[45vw] lg:w-[32vw] aspect-[3/4] overflow-hidden group">
-              <img
+              <img loading="lazy" decoding="async"
                 src={slide.img}
                 alt={`Paris Campaign ${idx + 1}`}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -685,7 +685,7 @@ export default function App() {
             </div>
 
             <div className="scroll-reveal aspect-[3/4] overflow-hidden">
-              <img src="/london_popup.jpeg" alt="ITURA Pop-Up" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+              <img loading="lazy" decoding="async" src="/london_popup.webp" alt="ITURA Pop-Up" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
         </div>
@@ -712,7 +712,7 @@ export default function App() {
               >
                 <div className="aspect-[16/10] overflow-hidden relative">
                   {popup.images.length > 0 ? (
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={popup.images[0]}
                       alt={popup.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
@@ -773,7 +773,7 @@ export default function App() {
                 >
                   {previousPopUps[galleryOpen].images.map((img, idx) => (
                     <div key={idx} className="flex-shrink-0 w-full sm:w-[48%] lg:w-[32%] aspect-[3/4] overflow-hidden">
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={img}
                         alt={`${previousPopUps[galleryOpen!].title} ${idx + 1}`}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
@@ -830,7 +830,7 @@ export default function App() {
         >
           {cocktailSlides.map((slide, idx) => (
             <div key={idx} className="flex-shrink-0 w-[75vw] sm:w-[45vw] lg:w-[32vw] aspect-[3/4] overflow-hidden group">
-              <img
+              <img loading="lazy" decoding="async"
                 src={slide.img}
                 alt={`Paris Cocktail ${idx + 1}`}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -940,7 +940,7 @@ export default function App() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
             <div className="scroll-reveal">
-              <img src="/iturawhite.png" alt="ITURA" className="h-12 mb-8" />
+              <img loading="lazy" decoding="async" src="/iturawhite.webp" alt="ITURA" className="h-12 mb-8" />
               <h2 className="font-serif text-3xl sm:text-4xl text-white leading-tight mb-6">
                 To be the global gateway for African creativity.
               </h2>
@@ -1003,3 +1003,4 @@ export default function App() {
     </>
   );
 }
+

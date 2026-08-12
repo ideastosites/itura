@@ -17,7 +17,7 @@ const PILLARS: Pillar[] = [
     title: 'Curated Selections',
     subtitle: 'Fashion, Beauty & Home Décor',
     desc: 'Curated selections of African fashion, beauty, accessories, and home décor. A Parisian storefront + global e-commerce reach.',
-    image: '/Hero_Images/IMG_7148.jpg',
+    image: '/Hero_Images/IMG_7148.webp',
     quote: '"More Than a Store — A Destination."',
     bullets: [
       'Curated selections of African fashion, beauty, accessories, and home décor',
@@ -30,7 +30,7 @@ const PILLARS: Pillar[] = [
     title: 'Immersive Storytelling Zones',
     subtitle: 'Educate and Engage Shoppers',
     desc: 'Immersive storytelling zones to educate and engage shoppers. Unified showcase and storytelling space for African brands.',
-    image: '/Paris_campaign/IMG_6688.jpg',
+    image: '/Paris_campaign/IMG_6688.webp',
     quote: '"Fashion. Culture. Commerce. Reimagined."',
     bullets: [
       'Immersive storytelling zones to educate and engage shoppers',
@@ -43,7 +43,7 @@ const PILLARS: Pillar[] = [
     title: 'Events & Brand Activations',
     subtitle: 'Workshops and Pop-Ups',
     desc: 'Events, workshops, and pop-up brand activations. Successful proof of concept through pop-ups and trade events (e.g. Who’s Next Paris).',
-    image: '/Paris_cocktail/IMG_7570.jpg',
+    image: '/Paris_cocktail/IMG_7570.webp',
     quote: '"Africa is not just rising — it’s redefining the future of fashion."',
     bullets: [
       'Events, workshops, and pop-up brand activations',
@@ -92,7 +92,7 @@ export const ConceptAccordion: React.FC = () => {
                 }`}
               >
                 {/* Background Image */}
-                <img
+                <img loading="lazy" decoding="async"
                   src={pillar.image}
                   alt={pillar.title}
                   className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ${

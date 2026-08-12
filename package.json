@@ -3,6 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "author": {
+    "name": "Ideastosites",
+    "url": "https://ideastosites.com"
+  },
+  "contributors": [
+    { "name": "Laolu Ibitoye" },
+    { "name": "Franklin Pre-Gee" },
+    { "name": "Oladele (Niji) Oladipupo" },
+    { "name": "Awwal Folarin" }
+  ],
   "scripts": {
     "dev": "vite",
     "server": "node server.js",
