@@ -1,5 +1,5 @@
 import express from 'express';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -141,28 +141,22 @@ app.post('/api/contact', async (req, res) => {
       toEmail = 'brands@ituraafrica.com';
     }
 
-    // 4. NODEMAILER CONFIGURATION
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: process.env.SMTP_PORT || 465,
-      secure: true,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+    // 4. RESEND CONFIGURATION
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
-    // 5. EMAIL OPTIONS
-    const mailOptions = {
-      from: `"ITURA Portal" <${process.env.SMTP_USER}>`,
+    // 5. SEND EMAIL
+    const { data, error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'ITURA Portal <onboarding@resend.dev>',
       to: toEmail,
       replyTo: email,
       subject: `[ITURA Portal] New ${source} from ${name}`,
       html: generateEmailTemplate({ name, email, firm, notes, source, job_title, phone, country, investment_type }),
-    };
+    });
 
-    // 5. SEND EMAIL
-    await transporter.sendMail(mailOptions);
+    if (error) {
+      console.error('Resend error:', error);
+      return res.status(500).json({ success: false, message: 'Failed to send message via Resend.' });
+    }
 
     res.status(200).json({ success: true, message: 'Message sent successfully.' });
   } catch (error) {
