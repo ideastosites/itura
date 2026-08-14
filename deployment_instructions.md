@@ -16,12 +16,13 @@ Before deploying the code, you need to create the email addresses that the conta
    - **Username:** `brands` (will become `brands@ituraafrica.com`)
    - Set a strong password for both (and save these passwords securely!).
    - Set Storage Space to **Unlimited** (or 1024 MB).
-5. **Create the SMTP Sender Account (Critical for the backend):**
-   - **Username:** `portal` or `noreply` (e.g., `noreply@ituraafrica.com`). This is the account that will securely send the automated emails out.
-   - Set a strong password for this account. You will need this for the `.env` file later.
+5. **Set up Resend API (Critical for the backend):**
+   - Go to [Resend.com](https://resend.com) and create an account.
+   - Verify your domain (`ituraafrica.com`) in the Resend dashboard.
+   - Generate an API Key. You will need this for the `.env` file later.
 
 > [!TIP]
-> After creating `noreply@ituraafrica.com`, click **Connect Devices** next to it. Under "Secure SSL/TLS Settings", note down the **Incoming/Outgoing Server** (usually `mail.ituraafrica.com`) and the **SMTP Port** (usually `465`). You will need these for your environment variables.
+> Ensure you verify your domain in Resend so emails are delivered reliably from `noreply@ituraafrica.com` rather than the default onboarding address.
 
 ---
 
@@ -72,11 +73,9 @@ In the `/home/yourcpanelusername/itura_app` folder, edit the `.env` file you jus
 NODE_ENV=production
 PORT=3001
 
-# The account that SENDS the emails
-SMTP_HOST=mail.ituraafrica.com
-SMTP_PORT=465
-SMTP_USER=noreply@ituraafrica.com
-SMTP_PASS=YourSecurePasswordHere
+# Resend API Configuration
+RESEND_API_KEY=re_your_resend_api_key_here
+RESEND_FROM_EMAIL=ITURA Portal <noreply@ituraafrica.com>
 
 # The fallback receiver
 CONTACT_EMAIL=info@ituraafrica.com
