@@ -218,7 +218,7 @@ export default function App() {
       if (res.ok) {
         setContactSubmitted(true);
         setTimeout(() => { setContactSubmitted(false); setContactName(''); setContactEmail(''); setContactFirm(''); setContactNotes(''); setContactWebsiteUrl(''); }, 5000);
-      } else { alert('Failed to send message. Please try again.'); }
+      } else { const errData = await res.json().catch(()=>({})); alert('Error: ' + (errData.message || 'Failed to send message.')); }
     } catch (err) { alert('Network error. Please try again.'); }
     finally { setIsContactSubmitting(false); }
   };
@@ -236,7 +236,7 @@ export default function App() {
       if (res.ok) {
         setSubmitted(true);
         setTimeout(() => { setSubmitted(false); setIsModalOpen(false); setEmailInput(''); setNameInput(''); setModalCompany(''); setModalWebsiteUrl(''); }, 3000);
-      } else { alert('Failed to send request. Please try again.'); }
+      } else { const errData = await res.json().catch(()=>({})); alert('Error: ' + (errData.message || 'Failed to send request.')); }
     } catch (err) { alert('Network error. Please try again.'); }
     finally { setIsModalSubmitting(false); }
   };
@@ -267,7 +267,7 @@ export default function App() {
           setDetailedModalType(null); 
           setDetName(''); setDetCompany(''); setDetJob(''); setDetEmail(''); setDetPhone(''); setDetCountry(''); setDetInvestType(''); 
         }, 3000);
-      } else { alert('Failed to send request. Please try again.'); }
+      } else { const errData = await res.json().catch(()=>({})); alert('Error: ' + (errData.message || 'Failed to send request.')); }
     } catch (err) { alert('Network error. Please try again.'); }
     finally { setIsDetSubmitting(false); }
   };
