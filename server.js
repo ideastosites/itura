@@ -1,5 +1,5 @@
 import express from 'express';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -17,6 +17,16 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// Nodemailer transporter using cPanel SMTP
+const transporter = nodemailer.createTransport({
+  host: 'localhost',
+  port: 25,
+  secure: false,
+  tls: {
+    rejectUnauthorized: false
+  }
+});
+
 // Ultra-clean HTML email template
 const generateEmailTemplate = (data) => {
   const { name, email, firm, notes, source, job_title, phone, country, investment_type } = data;
@@ -29,7 +39,7 @@ const generateEmailTemplate = (data) => {
         <title>ITURA - New Inquiry</title>
       </head>
       <body style="font-family: Arial, sans-serif; background-color: #F0F8FF; margin: 0; padding: 40px 20px; color: #0A0A0A;">
-        <div style="max-w: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #D8E5F2;">
+        <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #D8E5F2;">
           <!-- Header -->
           <div style="background-color: #6B0E1E; padding: 30px; text-align: center;">
             <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: normal; letter-spacing: 2px;">
@@ -126,10 +136,8 @@ app.post('/api/contact', async (req, res) => {
     const { name, email, firm, notes, website_url, source, job_title, phone, country, investment_type } = req.body;
 
     // 1. HONEYPOT VALIDATION (Bot Protection)
-    // If the hidden 'website_url' field has any value, silently drop the request
     if (website_url) {
       console.warn('Bot detected via honeypot field. Silently rejecting.');
-      // Deceptive 200 OK
       return res.status(200).json({ success: true, message: 'Message sent successfully.' });
     }
 
@@ -139,32 +147,24 @@ app.post('/api/contact', async (req, res) => {
     }
 
     // 3. ROUTE EMAIL BASED ON SOURCE
-    let toEmail = process.env.CONTACT_EMAIL || 'info@ituraafrica.com';
+    let toEmail = 'info@ituraafrica.com';
     if (source === 'Investor Inquiry' || source === 'Investor Deck Request' || source === 'Brand Participation (Join ITURA)') {
       toEmail = 'brands@ituraafrica.com';
     }
 
-    // 4. RESEND CONFIGURATION
-    const resend = new Resend(process.env.RESEND_API_KEY);
-
-    // 5. SEND EMAIL
-    const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'ITURA Portal <onboarding@resend.dev>',
+    // 4. SEND EMAIL via cPanel local SMTP
+    await transporter.sendMail({
+      from: 'ITURA Portal <noreply@ituraafrica.com>',
       to: toEmail,
       replyTo: email,
       subject: `[ITURA Portal] New ${source} from ${name}`,
       html: generateEmailTemplate({ name, email, firm, notes, source, job_title, phone, country, investment_type }),
     });
 
-    if (error) {
-      console.error('Resend error:', error);
-      return res.status(500).json({ success: false, message: `Failed to send message via Resend. Error: ${error.message}` });
-    }
-
     res.status(200).json({ success: true, message: 'Message sent successfully.' });
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).json({ success: false, message: `System Error: ${error.message || error}` });
+    res.status(500).json({ success: false, message: `Error: ${error.message}` });
   }
 });
 
