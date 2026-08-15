@@ -155,7 +155,7 @@ app.post('/api/contact', async (req, res) => {
 
     if (error) {
       console.error('Resend error:', error);
-      return res.status(500).json({ success: false, message: Failed to send message via Resend. Error:  });
+      return res.status(500).json({ success: false, message: `Failed to send message via Resend. Error: ${error.message}` });
     }
 
     res.status(200).json({ success: true, message: 'Message sent successfully.' });
