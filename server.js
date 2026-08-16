@@ -1,5 +1,5 @@
 import express from 'express';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -17,15 +17,7 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Nodemailer transporter using cPanel SMTP
-const transporter = nodemailer.createTransport({
-  host: 'localhost',
-  port: 25,
-  secure: false,
-  tls: {
-    rejectUnauthorized: false
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Ultra-clean HTML email template
 const generateEmailTemplate = (data) => {
@@ -147,19 +139,23 @@ app.post('/api/contact', async (req, res) => {
     }
 
     // 3. ROUTE EMAIL BASED ON SOURCE
-    let toEmail = 'info@ituraafrica.com';
+    let toEmail = process.env.CONTACT_EMAIL || 'info@ituraafrica.com';
     if (source === 'Investor Inquiry' || source === 'Investor Deck Request' || source === 'Brand Participation (Join ITURA)') {
       toEmail = 'brands@ituraafrica.com';
     }
 
-    // 4. SEND EMAIL via cPanel local SMTP
-    await transporter.sendMail({
-      from: 'ITURA Portal <noreply@ituraafrica.com>',
+    // 4. SEND EMAIL via Resend
+    const { error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'ITURA Portal <noreply@ituraafrica.com>',
       to: toEmail,
       replyTo: email,
       subject: `[ITURA Portal] New ${source} from ${name}`,
       html: generateEmailTemplate({ name, email, firm, notes, source, job_title, phone, country, investment_type }),
     });
+
+    if (error) {
+      throw new Error(error.message || 'Resend API error');
+    }
 
     res.status(200).json({ success: true, message: 'Message sent successfully.' });
   } catch (error) {
