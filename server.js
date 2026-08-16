@@ -17,7 +17,13 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend;
+function getResend() {
+  if (!resend) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 
 // Ultra-clean HTML email template
 const generateEmailTemplate = (data) => {
@@ -145,7 +151,7 @@ app.post('/api/contact', async (req, res) => {
     }
 
     // 4. SEND EMAIL via Resend
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'ITURA Portal <noreply@ituraafrica.com>',
       to: toEmail,
       replyTo: email,
