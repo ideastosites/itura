@@ -1,3 +1,4 @@
+﻿import DraggableMarquee from './components/DraggableMarquee';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowRight,
@@ -11,6 +12,28 @@ import {
 import { CustomCursor } from './components/CustomCursor';
 import { ConceptAccordion } from './components/ConceptAccordion';
 import { InteractiveLookbook } from './components/InteractiveLookbook';
+
+const brands = [
+  { name: 'Cute-Saint', bio: 'Cute-Saint is a contemporary African fashion brand rooted in culture, sustainability, and soulful design. we craft pieces that reflect the rhythm of Africa while speaking a global design language.', founder: 'Femi Ajose', country: 'Nigeria/France', productType: 'Clothing', website: 'http://www.cutesaint.com', image: '/Brands_Images/Itura brands 1.png' },
+  { name: 'MÁADÁN', bio: 'Máadán is an African skincare brand dedicated to promoting total well- being by redefining "GLOW" as an inner experience. Drawing inspiration from the Yoruba term "Adúmáradán," meaning "one who shines through their dark complexion.', founder: 'Adeitan Fisher', country: 'Nigeria', productType: 'Beauty/Skincare', website: null, image: '/Brands_Images/Itura brands 11.png' },
+  { name: 'FIA', bio: 'Founded in 2015, FIA is a contemporary womenswear brand exploring artisanal possibilities by Funke(F),Ijeoma(I) and Abisose(A), a dynamic female trio. FIA is strongly inspired by the totality of the woman and the societal narratives that translate to her life experiences to craft modern, eclectic, artsy and quirky garments that will continue to push boundaries and liberate women all over the world.', founder: 'Olufunke Ola, Ijeoma Jibunoh and Abisose Ola', country: 'Nigeria', productType: 'Clothing', website: 'http://www.fiafactory.com', image: '/Brands_Images/Itura brands 12.png' },
+  { name: 'Maliko', bio: 'Maliko is a Lagos-based artisanal footwear and accessory label founded in 2018 by self-taught designer Ebuka Omaliko. Rooted in culture yet globally minded, the brand fuses indigenous craftsmanship with contemporary design to create timeless pieces defined by refined luxury aesthetics.', founder: 'Ebuka Omaliko', country: 'Nigeria', productType: 'Accessories', website: null, image: '/Brands_Images/Itura brands 13.png' },
+  { name: 'Jacques Logoh', bio: 'Jacques Logoh Couture is a luxury fashion house of Togolese origin, founded by designer Jacques Logoh. Operating between Lomé and Paris, the brand stands out for its unique approach that blends African heritage, artisanal craftsmanship, and contemporary aesthetics.', founder: 'Jacques logoh', country: 'Togo/france', productType: 'Clothing', website: 'http://www.jacqueslogohcouture.com', image: '/Brands_Images/Itura brands 14.png' },
+  { name: 'Ruru', bio: 'Ruru emerged from our founder’s personal journey to discover clothing that embodies a timeless and effortless style. Ruru is a lifestyle brand that creates designs using premium natural fibres that reflect balance and ease. Each garment is thoughtfully crafted to prioritise comfort, quality, and precision, empowering women to feel confident and engaged.', founder: 'Ruth Obih', country: 'Nigeria', productType: 'Clothing', website: 'http://www.republicofruru.com', image: '/Brands_Images/Itura brands 15.png' },
+  { name: "O'saunders", bio: "O'saunders is a unisex brand that you can represents modern day men/ women", founder: 'Olabisi Saunders', country: 'Nigeria', productType: 'Accessories, Clothing', website: 'mailto:Osaunders.designer@gmail.com', image: '/Brands_Images/Itura brands 16.png' },
+  { name: 'Izoduuwa', bio: 'Izoduuwa is an Afro-contemporary fashion brand blending African heritage, handcrafted techniques, and modern design. Through linen, denim, and traditional Nigerian textiles such as Aso Oke, we create timeless pieces that celebrate culture, craftsmanship, and identity. Through compelling visuals, storytelling, and creative expression, we bring these narratives to life, connecting African heritage with a global audience.', founder: 'Perry Aigbovbiosa', country: 'Nigeria', productType: 'Clothing, Lifestyle Products', website: 'http://www.izoduuwa.com.ng', image: '/Brands_Images/Itura brands 17.png' },
+  { name: 'Vicy and Lawrence', bio: 'VICY & LAWRENCE is a bold Nigerian fashion brand reshaping urban style through a futuristic lens. Guided by the ethos “Tradition changes, culture is who we are,” the brand merges deep-rooted heritage with fearless innovation', founder: 'Obiora Victor', country: 'Nigeria', productType: 'Clothing', website: 'https://ananse.com/en/vicy&lawrence', image: '/Brands_Images/Itura brands 18.png' },
+  { name: 'Dear Ketandu', bio: 'Dear Ketandu is a repair-focused body and scalp care brand rooted in restorative living. We create effective care rituals for dry, stressed skin and scalp while building a softer, more intentional way of living.', founder: 'Oluchi C. Ekeruche', country: 'Nigeria', productType: 'Beauty/Skincare', website: 'http://www.dearketandu.com', image: '/Brands_Images/Itura brands 19.png' },
+  { name: 'LOHIJE', bio: "LOHIJE is a contemporary African lifestyle brand from Lagos, Nigeria, inspired by the spirit of exploration. Made for the adventurer in soul, spirit and body, LOHIJE explores Africa's rich heritage, craftsmanship, and cultural stories, transforming them into thoughtfully designed pieces for modern living.", founder: 'Gift Olohije', country: 'Nigeria', productType: 'Clothing', website: 'http://www.lohije.com', image: '/Brands_Images/Itura brands 10.png' },
+  { name: 'DESTOM', bio: 'Destom is a fluid fashion label rooted in inheritance — named after a grandmother, shaped by the codes of Caribbean cultural blending, expressed in the cuts, the fabrics, the way things are worn and felt.', founder: 'Belair kevin', country: 'France', productType: 'Clothing', website: 'https://www.instagram.com/destomofficial', image: '/Brands_Images/Itura brands 9.png' },
+  { name: 'NoahbyWMA', bio: 'NOAH is the signature luxury product range of Woven Market Africa, a Nigerian textile company shaping the future of African weaving through design, innovation, and craft. Developed within the Woven Market Africa ecosystem, NOAH transforms Nigerian-grown cotton into heirloom-quality textiles for fashion and interiors.', founder: 'Faika Philips', country: 'Nigeria', productType: 'Clothing, Accessories', website: 'http://www.noahbywma.com', image: '/Brands_Images/Itura brands 8.png' },
+  { name: 'ÀÁDÚN & Co', bio: 'ÀÁDÙN & Co. is a contemporary, fragrance-powered wellness brand rooted in West African botanical traditions. We craft clean, alcohol-free perfume oils & botanical teas designed around intentional living and rich storytelling. Each scent is named in Yoruba and carries its own cultural narrative, transforming a simple daily routine into a grounding self-care ritual.', founder: 'Samira Bello', country: 'Nigeria', productType: 'Lifestyle Products', website: 'http://www.aadun.co', image: '/Brands_Images/Itura brands 7.png' },
+  { name: 'Austine Mali', bio: "There's a seam on every Austine Mali piece that most people will never look for, and that's exactly the point. We build clothes the way tailors used to before speed became the industry's only metric: hand-finished, deliberate, made to outlast the season they were made for.", founder: 'Uche Onyemali', country: 'United Kingdom', productType: 'Clothing', website: 'http://www.austinemali.com', image: '/Brands_Images/Itura brands 6.png' },
+  { name: 'RENIKEJI', bio: 'RENIKEJI celebrates the power of jewelry to anchor us to the world and all that it means. We create pieces that inspire curiosity and attentiveness to our home, Nigeria. At the heart of our craft is a commitment to materials with resonance, from brass to the gemstones of Nigerian origin. Each piece is crafted by hand- honouring centuries of Nigerian jewelry design and craftsmanship.', founder: 'Oluwakemi Agbato', country: 'Nigeria', productType: 'Accessories', website: 'http://www.renikeji.com', image: '/Brands_Images/Itura brands 5.png' },
+  { name: 'Isaleekofromderin', bio: 'Isaleekofromderin is a made to measure fashion brand based in Lagos, Nigeria. Founded in 2023 by Nigerian fashion lifestyle influencer Aderinola Odugbesan. Isaleekofromderin creates comfort-first, all size friendly pieces designed for women who value ease, confidence, and effortless style. Inspired by the vibrancy of Lagos.', founder: 'Aderinola Odugbesan', country: 'Nigeria', productType: 'Clothing', website: 'http://isaleekofromderin.com', image: '/Brands_Images/Itura brands 4.png' },
+  { name: 'AfroWema', bio: 'AfroWema is a Kenya-based sustainable fashion brand redefining African luxury through conscious design. Founded by Portuguese biologist and sustainability advocate Tatiana Teixeira, AfroWema transforms discarded denim, locally sourced textiles, and reclaimed materials into timeless, handcrafted pieces created by artisans in Kibera, Nairobi', founder: 'Tatiana Teixeira', country: 'Kenya', productType: 'Clothing', website: 'http://www.afrowema.com', image: '/Brands_Images/Itura brands 3.png' },
+  { name: 'Studio Lola', bio: 'Studio Lola is a women-led, ethical design atelier that celebrates heritage craft techniques through meticulously hand-crafted timeless creations.', founder: 'Sarah Saleheen', country: 'Kenya', productType: 'Clothing, Accessories', website: 'http://www.studiolola.design', image: '/Brands_Images/Itura brands 2.png' },
+];
 
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -45,6 +68,20 @@ export default function App() {
   const [detInvestType, setDetInvestType] = useState('');
   const [detSubmitted, setDetSubmitted] = useState(false);
   const [isDetSubmitting, setIsDetSubmitting] = useState(false);
+  const [selectedBrand, setSelectedBrand] = useState<{ name: string; bio: string; founder: string; country: string; productType: string; website: string | null; image: string | null } | null>(null);
+
+  // Lock body scroll when any modal is open
+  useEffect(() => {
+    if (galleryOpen !== null || isModalOpen || detailedModalType !== null || selectedBrand !== null) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [galleryOpen, isModalOpen, detailedModalType, selectedBrand]);
+
 
   // Drag carousel refs & state
   const campaignRef = useRef<HTMLDivElement>(null);
@@ -424,7 +461,7 @@ export default function App() {
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'nav-glass py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between">
           <a href="#" className="z-10">
-            <img loading="lazy" decoding="async" src={scrolled ? '/ituracolor.webp' : '/iturawhite.webp'} alt="ITURA" className="h-8 sm:h-12 transition-all" />
+            <img src={scrolled ? '/ituracolor.webp' : '/iturawhite.webp'} alt="ITURA" className="h-8 sm:h-12 transition-all" />
           </a>
           <div className={`hidden lg:flex items-center gap-8 text-[11px] tracking-[0.2em] uppercase font-medium transition-colors duration-500 ${scrolled ? 'text-[#0A0A0A]' : 'text-white'}`}>
             {navLinks.map((link) => (
@@ -544,8 +581,7 @@ export default function App() {
 
             <div className="scroll-reveal h-full w-full">
               <div className="aspect-[3/4] overflow-hidden group">
-                <img loading="lazy" decoding="async"
-                  src="/second section.webp"
+                <img src="/second section.webp"
                   alt="ITURA Experience"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
@@ -625,7 +661,7 @@ export default function App() {
         >
           {campaignSlides.map((slide, idx) => (
             <div key={idx} className="flex-shrink-0 w-[75vw] sm:w-[45vw] lg:w-[32vw] aspect-[3/4] overflow-hidden group">
-              <img loading="lazy" decoding="async"
+              <img 
                 src={slide.img}
                 alt={`Paris Campaign ${idx + 1}`}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -685,16 +721,76 @@ export default function App() {
             </div>
 
             <div className="scroll-reveal aspect-[3/4] overflow-hidden">
-              <img loading="lazy" decoding="async" src="/london_popup.webp" alt="ITURA Pop-Up" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+              <img src="/london_popup.webp" alt="ITURA Pop-Up" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
         </div>
       </section>
 
+      {/* BRAND PARTICIPATION - Scrolling marquee + modal */}
+      <section id="brands" className="pt-20 sm:pt-28 pb-4 sm:pb-8 bg-[#0A0A0A] overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 mb-16 scroll-reveal">
+          <p className="text-xs tracking-[0.3em] uppercase text-[#D4AF37] mb-4 font-medium">Participating Brands</p>
+          <h2 className="font-serif text-3xl sm:text-5xl text-white">The Brands of ITURA</h2>
+          <p className="text-white/50 text-base mt-4 max-w-xl leading-relaxed">A curated selection of Africa's most compelling independent fashion and lifestyle labels — click any name to learn more.</p>
+        </div>
+        <DraggableMarquee speed={1.2} direction="left">
+            {brands.map((brand, idx) => (
+              <button key={`top-${idx}`} onClick={() => setSelectedBrand(brand)} className="flex-shrink-0 mx-4 px-8 py-6 group focus:outline-none hover:bg-white/5 border border-transparent hover:border-white/10 transition-all duration-300 rounded-sm">
+                <span className="font-serif text-4xl sm:text-5xl lg:text-6xl text-white/50 group-hover:text-white transition-colors duration-300 whitespace-nowrap tracking-wide">{brand.name}</span>
+              </button>
+            ))}
+        </DraggableMarquee>
+        <div className="mt-8">
+          <DraggableMarquee speed={1.2} direction="right">
+            {brands.map((brand, idx) => (
+              <button key={`bot-${idx}`} onClick={() => setSelectedBrand(brand)} className="flex-shrink-0 mx-4 px-8 py-6 group focus:outline-none hover:bg-white/5 border border-transparent hover:border-white/10 transition-all duration-300 rounded-sm">
+                <span className="font-serif text-4xl sm:text-5xl lg:text-6xl text-white/50 group-hover:text-white transition-colors duration-300 whitespace-nowrap tracking-wide">{brand.name}</span>
+              </button>
+            ))}
+          </DraggableMarquee>
+        </div>
+      </section>
+
+      {selectedBrand && (
+        <div className="fixed inset-0 z-[80] bg-black/95 flex items-center justify-center p-4 sm:p-8" onClick={(e) => e.target === e.currentTarget && setSelectedBrand(null)}>
+          <div className="relative bg-[#0F0F0F] border border-white/10 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <button onClick={() => setSelectedBrand(null)} className="absolute top-4 right-4 z-10 text-white/40 hover:text-white transition-colors" aria-label="Close"><X className="w-6 h-6" /></button>
+            
+            {/* Promotional image (500x500 px placeholder layout) */}
+            <div className="w-full aspect-square bg-white/5 flex items-center justify-center border-b border-white/10">
+              {selectedBrand.image ? (
+                <img src={selectedBrand.image} alt={selectedBrand.name} className="w-full h-full object-cover"  />
+              ) : (
+                <div className="text-center px-8">
+                  <div className="w-16 h-16 border border-white/20 flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white/30 text-2xl font-serif">{selectedBrand.name.charAt(0)}</span>
+                  </div>
+                  <p className="text-white/20 text-xs tracking-[0.2em] uppercase">Promotional Image</p>
+                  <p className="text-white/10 text-xs mt-1">500 x 500 px</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="p-8">
+              <span className="inline-block text-[10px] tracking-[0.25em] uppercase text-[#D4AF37] border border-[#D4AF37]/30 px-3 py-1 mb-5">{selectedBrand.productType}</span>
+              <h3 className="font-serif text-3xl text-white mb-4">{selectedBrand.name}</h3>
+              <p className="text-white/60 text-sm leading-relaxed mb-6">{selectedBrand.bio}</p>
+              
+              <div className="space-y-3 border-t border-white/10 pt-6">
+                <div className="flex justify-between text-sm"><span className="text-white/30 tracking-[0.1em] uppercase text-xs">Founder</span><span className="text-white/80 text-right max-w-[60%]">{selectedBrand.founder}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-white/30 tracking-[0.1em] uppercase text-xs">Country</span><span className="text-white/80">{selectedBrand.country}</span></div>
+                {selectedBrand.website && (<div className="flex justify-between text-sm"><span className="text-white/30 tracking-[0.1em] uppercase text-xs">Website</span><a href={selectedBrand.website} target="_blank" rel="noopener noreferrer" className="text-[#D4AF37] hover:underline underline-offset-2 text-right max-w-[55%] break-all">{selectedBrand.website.replace(/^https?:\/\/(www\.)?/, '')}</a></div>)}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ══════════════════════════════════════════════════
           PREVIOUS POP-UPS — Fashion editorial cards
           ══════════════════════════════════════════════════ */}
-      <section className="pt-20 sm:pt-28 pb-10 sm:pb-16 bg-[#0A0A0A] overflow-hidden">
+      <section className="pt-8 sm:pt-12 pb-10 sm:pb-16 bg-[#0A0A0A] overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20">
           <div className="flex items-end justify-between mb-14 scroll-reveal">
             <div>
@@ -712,7 +808,7 @@ export default function App() {
               >
                 <div className="aspect-[16/10] overflow-hidden relative">
                   {popup.images.length > 0 ? (
-                    <img loading="lazy" decoding="async"
+                    <img 
                       src={popup.images[0]}
                       alt={popup.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
@@ -773,7 +869,7 @@ export default function App() {
                 >
                   {previousPopUps[galleryOpen].images.map((img, idx) => (
                     <div key={idx} className="flex-shrink-0 w-full sm:w-[48%] lg:w-[32%] aspect-[3/4] overflow-hidden">
-                      <img loading="lazy" decoding="async"
+                      <img 
                         src={img}
                         alt={`${previousPopUps[galleryOpen!].title} ${idx + 1}`}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
@@ -830,7 +926,7 @@ export default function App() {
         >
           {cocktailSlides.map((slide, idx) => (
             <div key={idx} className="flex-shrink-0 w-[75vw] sm:w-[45vw] lg:w-[32vw] aspect-[3/4] overflow-hidden group">
-              <img loading="lazy" decoding="async"
+              <img 
                 src={slide.img}
                 alt={`Paris Cocktail ${idx + 1}`}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -940,7 +1036,7 @@ export default function App() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
             <div className="scroll-reveal">
-              <img loading="lazy" decoding="async" src="/iturawhite.webp" alt="ITURA" className="h-12 mb-8" />
+              <img  src="/iturawhite.webp" alt="ITURA" className="h-12 mb-8" />
               <h2 className="font-serif text-3xl sm:text-4xl text-white leading-tight mb-6">
                 To be the global gateway for African creativity.
               </h2>
@@ -1003,4 +1099,3 @@ export default function App() {
     </>
   );
 }
-
