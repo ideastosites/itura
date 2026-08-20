@@ -172,6 +172,7 @@ export default function App() {
     { label: 'Concept', href: '#concept' },
     { label: 'Archive', href: '#archive' },
     { label: 'Events', href: '#popup' },
+    { label: 'Brands', href: '#brands' },
     { label: 'Join Us', href: '#join-us' },
   ];
 
